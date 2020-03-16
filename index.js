@@ -20,8 +20,8 @@ const options = {
     clientID:           process.env.LOGINID_APPID,
     clientSecret:       process.env.LOGINID_APPSECRET,
     callbackURL:        process.env.LOGINID_REDIRECT_URI,
-    authorizationURL:   process.env.LOGINID_URL + 'hydra/oauth2/auth',
-    tokenURL:           process.env.LOGINID_URL + 'hydra/oauth2/token',
+    authorizationURL:   process.env.LOGINID_URI + 'hydra/oauth2/auth',
+    tokenURL:           process.env.LOGINID_URI + 'hydra/oauth2/token',
     scope:              process.env.LOGINID_SCOPES ,
     state:              base64url(JSON.stringify({state: process.env.LOGINID_APPID})),
 };
