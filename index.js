@@ -72,7 +72,7 @@ app.get('/', (req, res) => {
 });
 app.get('/login', passport.authenticate('oauth2'));
 app.get('/callback', passport.authenticate('oauth2'), (req, res) => {
-    res.send('Check terminal logs');
+    res.send(`Welcome, ${JSON.stringify(req.user)}`);
 });
 
 /**
