@@ -1,0 +1,23 @@
+<html>
+<head>
+  <title>Express HTML</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <div style="margin:100px;">
+    <div class="jumbotron"  style="padding:40px;">
+      <h1>Hello!</h1>
+      <% if (user) { %>
+        <p>Welcome <%= user %>, login successful!</p>
+        <p><a class="btn btn-primary btn-lg" href="/logout" role="button">Logout</a></p>
+      <% } else { %>
+        <p>This is a sample Express.js OIDC application. Try loggin in.</p>
+        <p><a class="btn btn-primary btn-lg" href="/login" role="button">Login</a></p>
+      <% } %>
+    </div>
+  </div>
+</body>
+</html>
