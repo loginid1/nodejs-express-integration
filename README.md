@@ -61,7 +61,7 @@ To obtain the client keys you will need to perform the following steps:
 
 **Step 1** - Using an existing account or registering a new one
 
- - Navigate to https://dev.sandbox.loginid.io 
+ - Navigate to https://sandbox-apse1.api.loginid.io/
  - Enter your username for an existing account or select the **"Register a new account"** option and create a username.
  - Hit the **"Next"** button
 
@@ -104,5 +104,9 @@ $ npm install
 #### Execute the project
 
 ```
-$ node index.js
+$ npm run start
+```
+Or run the project with a watcher 
+```
+$ npm run dev
 ```
