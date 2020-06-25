@@ -106,7 +106,7 @@ app.get("/", ensureLoggedOut("/dashboard"), (req, res) => {
 app.get("/login", passport.authenticate("oauth2"));
 
 /**
- * Callback route, the route that the LoginID api will redirect the user after logging in
+ * Callback route, the route that the api will redirect the user after logging in
  */
 app.get(
   "/callback",
