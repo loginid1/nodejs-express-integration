@@ -25,35 +25,35 @@ Our `hosts` file will look like the following:
 
 To configure the environment you will need to make a copy of `.env.example` file, rename it to `.env` and fill all the environment variables. To have a better understanding of the variables please refer to the documentation.
 
-###### The `LOGINID_URI` variable
+###### The `LOGIN_URI` variable
 
 This is the URI that will be used to communicate with LoginID's servers, for this example, we are using the development servers, therefore we are going to use the `https://sandbox-apse1.api.loginid.io/` URI.
 
 ```
-LOGINID_URI=https://sandbox-apse1.api.loginid.io/
+LOGIN_URI=https://sandbox-apse1.api.loginid.io/
 ```
 
-###### The `LOGINID_REDIRECT_URI` variable
+###### The `LOGIN_REDIRECT_URI` variable
 
 When the user authenticates themselves with LoginID (similar to authenticating with Google), LoginID will need to pass back control and information back to your servers. The Callback URL is the path that will be used to accomplish this and you will need to define it.
 
 Because we are using the custom URI our variable will look like the following:
 
 ```
-LOGINID_REDIRECT_URI=http://node.integration.localhost:3000/callback
+LOGIN_REDIRECT_URI=http://node.integration.localhost:3000/callback
 ```
 
 **Note:** Save this redirect URI, you will use it to create your client credentials later on. 
 
-###### The `LOGINID_SCOPES` variable
+###### The `LOGIN_SCOPES` variable
 
 You should use `openid` as the field for scopes
 
 ```
-LOGINID_SCOPES=openid
+LOGIN_SCOPES=openid
 ```
 
-###### The `LOGINID_APPID` and `LOGINID_APPSECRET` variables
+###### The `LOGIN_APPID` and `LOGIN_APPSECRET` variables
 
 In order to receive access to integrate LoginID, you will need to create your client credentials. This is similar to the credentials you would create with Google to use Google authentication. This allows you to use LoginID services in a secure, authenticated fashion.
 
@@ -85,11 +85,11 @@ Once you have access to the LoginID dashboard, use the navigation bar to select 
  - Enter a name for your application, website or service.
  - Enter the callback URL for your application, website or service.
  - Press the **"Create"** button.
- - Copy the Application ID and Application Secret and use them to fill the `LOGINID_APPID` and `LOGINID_APPSECRET` variables respectively.
+ - Copy the Application ID and Application Secret and use them to fill the `LOGIN_APPID` and `LOGIN_APPSECRET` variables respectively.
 
 ```
-LOGINID_APPID=your.application.id
-LOGINID_APPSECRET=your.application.secret
+LOGIN_APPID=your.application.id
+LOGIN_APPSECRET=your.application.secret
 ```
 
 ## Running the project
