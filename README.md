@@ -72,20 +72,19 @@ To obtain the client keys you will need to perform the following steps:
 
 **Step 3** - Enter the integration dashboard
 
-Once you have access to the LoginID dashboard, use the navigation bar to select **"Integration"** option or press the **"Get Integrated"** button.
+Once you have access to the LoginID dashboard, use the navigation bar to select **"Integrations"** option or press the **"Add Integration"** button.
 
-**Step 4** - Sign the CLA
+**Step 4** - Sign the Customer License Agreement
 
- - Scroll down the page and press the **"Sign CLA"** button.
+ - Scroll down the page and press the **"View"** button.
  - Agree to the terms and press the **"Sign"** button.
 
-**Step 5** - Add new OAuth2 Integration
-
+**Step 5** - Add new OIDC Integration
+ 
+ - Press the **"Get Integrated"** button under the OIDC box.
  - Enter a name for your application, website or service.
  - Enter the callback URL for your application, website or service.
- - Select which scopes you would like to use. **_(In Progress)_**
- - Optionally check **"Create separate endpoints"** if you wish to be able to specify the display of Login or Register screens in your application.
- - Press the **"Request new client"** button.
+ - Press the **"Create"** button.
  - Copy the Application ID and Application Secret and use them to fill the `LOGINID_APPID` and `LOGINID_APPSECRET` variables respectively.
 
 ```
