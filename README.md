@@ -47,10 +47,10 @@ LOGINID_REDIRECT_URI=http://node.integration.localhost:3000/callback
 
 ###### The `LOGINID_SCOPES` variable
 
-You can leave this field empty for now, but if you need access to the refresh token you need to provide the `offline` scope.
+You should use `openid` as the field for scopes
 
 ```
-LOGINID_SCOPES=offline
+LOGINID_SCOPES=openid
 ```
 
 ###### The `LOGINID_APPID` and `LOGINID_APPSECRET` variables
