@@ -18,11 +18,11 @@ const port = process.env.PORT || 3000;
  * Making sure that the required environment variables are filled out
  */
 const requiredEnvParams = [
-  "LOGINID_APPID",
-  "LOGINID_APPSECRET",
-  "LOGINID_REDIRECT_URI",
-  "LOGINID_URI",
-  "LOGINID_SCOPES",
+  "LOGIN_APPID",
+  "LOGIN_APPSECRET",
+  "LOGIN_REDIRECT_URI",
+  "LOGIN_URI",
+  "LOGIN_SCOPES",
 ];
 for (const param of requiredEnvParams) {
   if (!process.env[param]) {
@@ -36,13 +36,13 @@ for (const param of requiredEnvParams) {
  * defining options for Oauth2Strategy
  */
 const options = {
-  clientID: process.env.LOGINID_APPID,
-  clientSecret: process.env.LOGINID_APPSECRET,
-  callbackURL: process.env.LOGINID_REDIRECT_URI,
-  authorizationURL: `${process.env.LOGINID_URI}hydra/oauth2/auth`,
-  tokenURL: `${process.env.LOGINID_URI}hydra/oauth2/token`,
-  scope: process.env.LOGINID_SCOPES,
-  state: base64url(JSON.stringify({ state: process.env.LOGINID_APPID })),
+  clientID: process.env.LOGIN_APPID,
+  clientSecret: process.env.LOGIN_APPSECRET,
+  callbackURL: process.env.LOGIN_REDIRECT_URI,
+  authorizationURL: `${process.env.LOGIN_URI}hydra/oauth2/auth`,
+  tokenURL: `${process.env.LOGIN_URI}hydra/oauth2/token`,
+  scope: process.env.LOGIN_SCOPES,
+  state: base64url(JSON.stringify({ state: process.env.LOGIN_APPID })),
   passReqToCallback: true, // this is important, so you can obtain the bearer token in the verify() function
 };
 
