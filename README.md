@@ -27,10 +27,10 @@ To configure the environment you will need to make a copy of `.env.example` file
 
 ###### The `LOGIN_URI` variable
 
-This is the URI that will be used to communicate with LoginID's servers, for this example, we are using the development servers, therefore we are going to use the `https://sandbox-apse1.api.loginid.io/` URI.
+This is the URI that will be used to communicate with LoginID's servers, for this example, we are using the development servers, therefore we are going to use the `https://sandbox-usw1.api.loginid.io/` URI.
 
 ```
-LOGIN_URI=https://sandbox-apse1.api.loginid.io/
+LOGIN_URI=https://sandbox-usw1.api.loginid.io/
 ```
 
 ###### The `LOGIN_REDIRECT_URI` variable
