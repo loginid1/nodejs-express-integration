@@ -62,7 +62,7 @@ To obtain the client keys you will need to perform the following steps:
 **Step 1** - Using an existing account or registering a new one
 
  - Navigate to https://sandbox-usw1.api.loginid.io/en/register
- - Enter your username for an existing account or select the **"Register a new account"** option and create a username.
+ - Enter your username for an existing account or select the **"Register a new account"** option and create a username
  - Hit the **"Next"** button
 
 **Step 2** - Use your biometric capabilities
