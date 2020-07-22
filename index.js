@@ -13,7 +13,7 @@ const axios = require('axios');
  * 
  */
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8081;
 
 /**
  * 
@@ -68,6 +68,9 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }));
+app.use(express.urlencoded({
+    extended: true
+}))
 app.use(passport.initialize());
 app.use(passport.session());
 app.set('view engine', 'ejs');
@@ -90,12 +93,34 @@ passport.deserializeUser(function (user, done) {
 app.get('/', (req, res) => {
     res.render('index', { user: req.user ? req.user.sub : null });
 });
-app.get('/login', passport.authenticate('oauth2'));
+app.get('/tx', (req, res) => {
+    res.render('tx');
+});
+
+app.get('/tx-success', (req, res) => {
+    res.render('tx-success');
+});
+app.get('/login', passport.authenticate('oauth2', { scope: ['openid', 'tx.ldOFmDSekNSIf7YMoOj1'] }));
+app.post('/validate', async (req, res, next) => {
+    try {
+        const { data: tx } = await axios.post('http://localhost:8080/api/oidc/tx', req.body);
+        passport.authenticate('oauth2', { scope: ['openid', `tx.${tx.id}`] }, (err, user, info) => {
+            if (err) { return next(err); }
+            if (!user) { return res.redirect('/login'); }
+            req.logIn(user, (err) => {
+                if (err) { return next(err); }
+                return res.redirect('/tx-success');
+            });
+        })(req, res, next);
+    } catch (err) {
+        console.log(err);
+    }
+});
 app.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
 });
-app.get('/callback', passport.authenticate('oauth2', { failureRedirect: '/login' }), (req, res) => {
+app.get('/callback', passport.authenticate('oauth2', { failureRedirect: '/login' }), async (req, res) => {
     res.redirect('/');
 });
 
