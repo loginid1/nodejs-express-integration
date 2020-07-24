@@ -5,48 +5,10 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
     integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-
-  <title>Send money</title>
-</head>
-
-<body>
-  <div class="card">
-    <h5 class="card-header">Send</h5>
-    <div class="card-body">
-      <form action="/validate" method="POST">
-        <div class="form-row">
-          <div class="col mb-3">
-            <label for="validationDefaultUsername">To</label>
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroupPrepend2">@</span>
-              </div>
-              <input type="text" name="to_account" class="form-control" id="validationDefaultUsername" placeholder="Username"
-                aria-describedby="inputGroupPrepend2" required>
-            </div>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="col mb-3">
-            <label for="validationDefaultUsername">Amount</label>
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroupPrepend2">$</span>
-              </div>
-              <input type="number" name="amount" class="form-control" id="validationDefaultUsername"
-                aria-describedby="inputGroupPrepend2" required>
-            </div>
-          </div>
-        </div>
-        <button class="btn btn-primary" type="submit">Send</button>
-      </form>
-    </div>
-  </div>
-
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.0.0/build/styles/default.min.css">
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.0.0/build/highlight.min.js"></script>
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
@@ -58,12 +20,89 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
     integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
     crossorigin="anonymous"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
+
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.19/lodash.min.js"></script>
+
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script>
+
+  <title>Transaction</title>
+</head>
+
+<body>
+  <div id="app">
+    <div class="card m-lg-5">
+      <div class="card-body">
+        <form action="/validate" method="POST">
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="card m-lg-3 m-1">
+                <h5 class="card-header">Create Transaction</h5>
+                <div class="card-body">
+                  <div v-for="(value, i) in form" :key="i" class="form-row mb-3">
+                    <label :for="i">{{toLabel(i)}}</label>
+                    <div class="input-group">
+                      <div class="col-4">
+                        <input :value="i" @change="onPropChange(i, $event.target.value)" type="text"
+                          class="form-control" placeholder="Enter Field Name" required>
+                      </div>
+                      <div class="col">
+                        <input v-model="form[i]" placeholder="Enter Value" type="text" :name="i" class="form-control" required>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-row mt-4">
+                    <button @click.prevent="addField" class="btn btn-primary">Add field</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="card m-lg-3 m-1">
+                <div class="card-body">
+                  <pre><code class="json" v-html="JSON.stringify(form, null, 4)"></code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <button class="btn btn-primary confirm-btn m-2" type="submit">Confirm Transaction</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 
-<style>
-  .card {
-    margin: 2rem;
-  }
-</style>
+<script>
+  var app = new Vue({
+    el: '#app',
+    data() {
+      return {
+        form: {
+          field_1: ""
+        }
+      }
+    },
+    methods: {
+      toLabel(value) {
+        return _.startCase(value);
+      },
+      addField() {
+        const fieldName = `field_${Object.keys(this.form).length + 1}`;
+        Vue.set(this.form, fieldName, "");
+      },
+      onPropChange(prop, newProp) {
+        const value = this.form[prop];
+        Vue.delete(this.form, prop);
+        Vue.set(this.form, _.snakeCase(newProp), value);
+      }
+    }
+  })
+</script>
 
 </html>

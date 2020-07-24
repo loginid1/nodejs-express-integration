@@ -1,17 +1,26 @@
 <html>
+
 <head>
   <title>Express HTML</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.0.0/build/styles/default.min.css">
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.0.0/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script>
 </head>
+
 <body>
   <div style="margin:100px;">
-    <div class="jumbotron"  style="padding:40px;">
-        <p>Transaction successful!</p>
-        <p><a class="btn btn-primary btn-lg" href="/tx" role="button">Send again</a></p>
-    </div>
+    <h1>Transaction confirmed!</h1>
+    <% if (tx) { %>
+    <pre><code><%= JSON.stringify(tx, null, 4) %></code></pre>
+    <% }%>
+    <p><a class="btn btn-primary btn-lg" href="/" role="button">Home</a><a class="btn btn-primary btn-lg" href="/tx" role="button">Send again</a></p>
   </div>
 </body>
+
 </html>

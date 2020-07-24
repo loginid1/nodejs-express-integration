@@ -28,6 +28,16 @@ const options = {
     state: base64url(JSON.stringify({ state: process.env.LOGINID_APPID })),
 };
 
+const optionsTx = {
+    clientID: process.env.LOGINID_APPID,
+    clientSecret: process.env.LOGINID_APPSECRET,
+    callbackURL: process.env.LOGINID_REDIRECT_URI_TX,
+    authorizationURL: process.env.LOGINID_URI + '/hydra/oauth2/auth',
+    tokenURL: process.env.LOGINID_URI + '/hydra/oauth2/token',
+    scope: process.env.LOGINID_SCOPES,
+    state: base64url(JSON.stringify({ state: process.env.LOGINID_APPID })),
+};
+
 /**
  * 
  */
@@ -40,6 +50,7 @@ const verify = async (accessToken, refreshToken, params, profile, cb) => {
 
 
 const oauth2Strategy = new OAuth2Strategy(options, verify)
+const transactionStrategy = new OAuth2Strategy(optionsTx, verify)
 
 
 /**
@@ -80,6 +91,8 @@ app.set('views', path.join(__dirname + '/views'))
  * 
  */
 passport.use('oauth2', oauth2Strategy);
+passport.use('transaction', transactionStrategy);
+
 passport.serializeUser(function (user, done) {
     done(null, user);
 });
@@ -93,33 +106,40 @@ passport.deserializeUser(function (user, done) {
 app.get('/', (req, res) => {
     res.render('index', { user: req.user ? req.user.sub : null });
 });
+
 app.get('/tx', (req, res) => {
     res.render('tx');
 });
 
-app.get('/tx-success', (req, res) => {
-    res.render('tx-success');
-});
-app.get('/login', passport.authenticate('oauth2', { scope: ['openid', 'tx.ldOFmDSekNSIf7YMoOj1'] }));
+
+app.get('/login', passport.authenticate('oauth2', { scope: ['openid', 'tx.*'] }));
+
 app.post('/validate', async (req, res, next) => {
     try {
         const { data: tx } = await axios.post('http://localhost:8080/api/oidc/tx', req.body);
-        passport.authenticate('oauth2', { scope: ['openid', `tx.${tx.id}`] }, (err, user, info) => {
-            if (err) { return next(err); }
-            if (!user) { return res.redirect('/login'); }
-            req.logIn(user, (err) => {
-                if (err) { return next(err); }
-                return res.redirect('/tx-success');
-            });
-        })(req, res, next);
+        passport.authenticate('transaction', { scope: [`tx.${tx.id}`] })(req, res, next);
     } catch (err) {
         console.log(err);
     }
 });
+
+app.get('/tx-success', async (req, res) => {
+    let tx = {};
+    const scope = req.query?.scope;
+    if (scope) {
+        const txId = scope.startsWith("tx") ? scope.substring(3) : undefined;
+        if (txId) {
+            ({ data: tx } = await axios.get(`http://localhost:8080/api/oidc/tx/${txId}`));
+        }
+    }
+    res.render('tx-success', { tx });
+});
+
 app.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
 });
+
 app.get('/callback', passport.authenticate('oauth2', { failureRedirect: '/login' }), async (req, res) => {
     res.redirect('/');
 });
