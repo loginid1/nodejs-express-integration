@@ -107,9 +107,7 @@ app.get('/', (req, res) => {
     res.render('index', { user: req.user ? req.user.sub : null });
 });
 
-app.get('/tx', (req, res) => {
-    res.render('tx');
-});
+app.use('/tx', express.static('vue/dist'));
 
 
 app.get('/login', passport.authenticate('oauth2', { scope: ['openid', 'tx.*'] }));
