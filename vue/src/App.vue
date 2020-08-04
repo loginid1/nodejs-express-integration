@@ -66,7 +66,7 @@
               class="btn btn-primary confirm-btn"
               @click.prevent="register"
             >Register (DirectWeb)</button>
-          </div> -->
+          </div>-->
           <div class="col">
             <button
               class="btn btn-primary confirm-btn"
@@ -107,7 +107,14 @@
               </div>
             </div>
           </div>
-          <button hidden="true" type="button" class="close" data-dismiss="modal" aria-label="Close" id="close">
+          <button
+            hidden="true"
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            id="close"
+          >
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -198,21 +205,31 @@ export default {
       Vue.set(this.form, _.snakeCase(newProp), value);
     },
     async onClick() {
-      LoginidApi.initializeWithBaseURL(
-        "c84df67b-4b0f-4ae4-8e5c-ba266906ad69.loginid.io",
-        "http://localhost:8080/api/native"
-      ); // 'https://test.native.loginid.io');
-      const response = await LoginidApi.login(this.username);
-      console.log(response);
-      this.closeModal()
+      try {
+        LoginidApi.initializeWithBaseURL(
+          "c84df67b-4b0f-4ae4-8e5c-ba266906ad69.loginid.io",
+          "http://localhost:8080/api/native"
+        ); // 'https://test.native.loginid.io');
+        const createResponse = await LoginidApi.createTx(this.form, this.username);
+        this.tx = createResponse.tx;
+        const validateResponse = await LoginidApi.validateTx(createResponse, this.tx.id, this.username);
+        console.log(validateResponse);
+        window.location.href = `/tx-success?tx=${validateResponse.txId}`;
+      } catch (err) {
+        console.log(err);
+      }
+      this.closeModal();
     },
     async register() {
-      LoginidApi.initializeWithBaseURL(
-        "c84df67b-4b0f-4ae4-8e5c-ba266906ad69.loginid.io",
-        "http://localhost:8080/api/native"
-      ); // 'https://test.native.loginid.io');
-      const response = await LoginidApi.register(this.username);
-      console.log(response);
+      try {
+        LoginidApi.initializeWithBaseURL(
+          "c84df67b-4b0f-4ae4-8e5c-ba266906ad69.loginid.io",
+          "http://localhost:8080/api/native"
+        ); // 'https://test.native.loginid.io');
+        await LoginidApi.register(this.username);
+      } catch (err) {
+        console.log(err);
+      }
     },
     closeModal() {
       document.getElementById("close").click();

@@ -122,13 +122,14 @@ app.post('/validate', async (req, res, next) => {
 });
 
 app.get('/tx-success', async (req, res) => {
+    let txId = req.query?.tx;
+    if (req.query?.scope) {
+        txId = req.query?.scope.startsWith("tx") ? req.query?.scope.substring(3) : undefined;
+    }
+
     let tx = {};
-    const scope = req.query?.scope;
-    if (scope) {
-        const txId = scope.startsWith("tx") ? scope.substring(3) : undefined;
-        if (txId) {
-            ({ data: tx } = await axios.get(`http://localhost:8080/api/oidc/tx/${txId}`));
-        }
+    if (txId) {
+        ({ data: tx } = await axios.get(`http://localhost:8080/api/oidc/tx/${txId}`));
     }
     res.render('tx-success', { tx });
 });

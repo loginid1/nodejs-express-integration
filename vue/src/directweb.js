@@ -191,6 +191,111 @@ export default class LoginidApi {
 
     }
 
+    static async createTx(tx, username) {
+        if (!LoginidApi.detectSupportAgent()) {
+            return {
+                errorMessage: "Browser Agent doesn't support fido2"
+            };
+        }
+        try {
+            let uid = localStorage.getItem("credId_" + username);
+
+            let requestPayload;
+
+            if (uid == null) {
+                requestPayload = {
+                    clientId: LoginidApi_clientId,
+                    username: username
+                };
+            } else {
+                requestPayload = {
+                    clientId: LoginidApi_clientId,
+                    uid: uid
+                };
+            }
+
+            requestPayload.tx = tx;
+
+            // server start
+            return await sendPayloadToServer(LoginidApi_baseURL, '/verifyRequest', requestPayload);
+        } catch (e) {
+            console.log("create tx error", e);
+            return {
+                success: false,
+                errorMessage: e
+            }
+        }
+    }
+
+    static async validateTx(createTxResponse, txId, username) {
+        try {
+            //let uid=responseJSON.uid;
+            //let challenge=base64url.decode(responseJSON.challenge);
+            let challenge = createTxResponse.challenge;
+
+            // change challenge from base64url to array buffer
+            createTxResponse.challenge = LoginidApi.convertBase64ToBuffer(challenge);
+            // change user id from base64url to array buffer
+            //responseJSON.user.id=LoginidApi.convertBase64ToBuffer(responseJSON.user.id);
+            if (createTxResponse.allowCredentials) {
+                for (let cred of createTxResponse.allowCredentials) {
+                    cred.id = LoginidApi.convertBase64ToBuffer(cred.id);
+                }
+            }
+
+            let publicKey = { publicKey: createTxResponse };
+            let credential = await navigator.credentials.get(publicKey)
+
+            let assertPayload;
+            let uid = localStorage.getItem("credId_" + username);
+
+            if (uid == null) {
+
+                assertPayload = {
+                    clientId: LoginidApi_clientId,
+                    username: username,
+                    challenge: challenge,
+                    udata: username,
+                    keyHandle: LoginidApi.convertStringToBase64(credential.rawId),
+                    clientData: LoginidApi.convertStringToBase64(credential.response.clientDataJSON),
+                    authData: LoginidApi.convertStringToBase64(credential.response.authenticatorData),
+                    signData: LoginidApi.convertStringToBase64(credential.response.signature),
+                };
+            } else {
+                assertPayload = {
+                    clientId: LoginidApi_clientId,
+                    uid: uid,
+                    challenge: challenge,
+                    udata: username,
+                    keyHandle: LoginidApi.convertStringToBase64(credential.rawId),
+                    clientData: LoginidApi.convertStringToBase64(credential.response.clientDataJSON),
+                    authData: LoginidApi.convertStringToBase64(credential.response.authenticatorData),
+                    signData: LoginidApi.convertStringToBase64(credential.response.signature),
+                };
+            }
+
+            assertPayload.txId = txId;
+
+            // server end
+            const validateTxResponse = await sendPayloadToServer(LoginidApi_baseURL, '/verifySign', assertPayload);
+
+            return {
+                username,
+                jwt: validateTxResponse.jwt,
+                txId: validateTxResponse.txId,
+                success: true
+            }
+        }
+        catch (e) {
+            console.log("validate tx error", e);
+            return {
+                success: false,
+                errorMessage: e
+            }
+        }
+
+    }
+
     //convert string data to base64
     static convertStringToBase64(data) {
         const base64 = Buffer.from(data).toString('base64');
