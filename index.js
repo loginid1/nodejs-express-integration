@@ -39,8 +39,8 @@ const options = {
   clientID: process.env.LOGIN_APPID,
   clientSecret: process.env.LOGIN_APPSECRET,
   callbackURL: process.env.LOGIN_REDIRECT_URI,
-  authorizationURL: `${process.env.LOGIN_URI}hydra/oauth2/auth`,
-  tokenURL: `${process.env.LOGIN_URI}hydra/oauth2/token`,
+  authorizationURL: `${process.env.LOGIN_URI}oauth2/auth`,
+  tokenURL: `${process.env.LOGIN_URI}oauth2/token`,
   scope: process.env.LOGIN_SCOPES,
   state: base64url(JSON.stringify({ state: process.env.LOGIN_APPID })),
   passReqToCallback: true, // this is important, so you can obtain the bearer token in the verify() function
