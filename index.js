@@ -12,7 +12,7 @@ const { ensureLoggedOut, ensureLoggedIn } = require("connect-ensure-login");
  *
  */
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8000;
 
 /**
  * Making sure that the required environment variables are filled out
