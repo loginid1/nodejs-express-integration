@@ -76,13 +76,14 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(express.static('src'));
 
 /**
  *
  */
 passport.use(new OAuth2Strategy(options, verify));
 passport.serializeUser((user, done) => {
-  // note that the user param is whatever you passed into the done() function 
+  // note that the user param is whatever you passed into the done() function
   // in the verify function you defined earlier
   done(null, user);
 });
