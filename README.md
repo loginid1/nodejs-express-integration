@@ -72,10 +72,10 @@ $ npm run dev
 
 #### The `LOGIN_URI` variable
 
-This is the URI that will be used to communicate with LoginID's servers, for this example, we are using the development servers, therefore we are going to use the `https://usw1.loginid.io` URI.
+This is the URI that will be used to communicate with LoginID's servers.
 
 ```
-LOGIN_URI=https://oauth2.usw1.loginid.io/
+LOGIN_URI=https://oauth2.usw1.loginid.io
 ```
 
 #### The `LOGIN_REDIRECT_URI` variable
