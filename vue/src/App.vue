@@ -61,12 +61,12 @@
           <div class="col">
             <input v-model="username" class="form-control" placeholder="username" />
           </div>
-          <!-- <div class="col">
+          <div class="col">
             <button
               class="btn btn-primary confirm-btn"
               @click.prevent="register"
             >Register (DirectWeb)</button>
-          </div>-->
+          </div>
           <div class="col">
             <button
               class="btn btn-primary confirm-btn"
@@ -207,13 +207,12 @@ export default {
     async onClick() {
       try {
         LoginidApi.initializeWithBaseURL(
-          "c84df67b-4b0f-4ae4-8e5c-ba266906ad69.loginid.io",
-          "http://localhost:8080/api/native"
-        ); // 'https://test.native.loginid.io');
+          "txoidcdemo.awstest.loginid.io",
+          "https://poc1.awstest.loginid.io/api/native"
+        );
         const createResponse = await LoginidApi.createTx(this.form, this.username);
         this.tx = createResponse.tx;
         const validateResponse = await LoginidApi.validateTx(createResponse, this.tx.id, this.username);
-        console.log(validateResponse);
         window.location.href = `/tx-success?tx=${validateResponse.txId}`;
       } catch (err) {
         console.log(err);
@@ -223,9 +222,9 @@ export default {
     async register() {
       try {
         LoginidApi.initializeWithBaseURL(
-          "c84df67b-4b0f-4ae4-8e5c-ba266906ad69.loginid.io",
-          "http://localhost:8080/api/native"
-        ); // 'https://test.native.loginid.io');
+          "txoidcdemo.awstest.loginid.io",
+          "https://poc1.awstest.loginid.io/api/native"
+        );
         await LoginidApi.register(this.username);
       } catch (err) {
         console.log(err);

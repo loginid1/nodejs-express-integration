@@ -7,35 +7,36 @@ const cookie = require('cookie-parser');
 const passport = require('passport');
 const OAuth2Strategy = require('passport-oauth2');
 const axios = require('axios');
+const morgan = require('morgan');
 
 
 /**
  * 
  */
 const app = express();
-const port = process.env.PORT || 8081;
+const port = process.env.PORT || 8080;
 
 /**
  * 
  */
 const options = {
-    clientID: process.env.LOGINID_APPID,
-    clientSecret: process.env.LOGINID_APPSECRET,
-    callbackURL: process.env.LOGINID_REDIRECT_URI,
-    authorizationURL: process.env.LOGINID_URI + '/hydra/oauth2/auth',
-    tokenURL: process.env.LOGINID_URI + '/hydra/oauth2/token',
-    scope: process.env.LOGINID_SCOPES,
-    state: base64url(JSON.stringify({ state: process.env.LOGINID_APPID })),
+    clientID: process.env.LOGIN_APPID,
+    clientSecret: process.env.LOGIN_APPSECRET,
+    callbackURL: process.env.LOGIN_REDIRECT_URI,
+    authorizationURL: process.env.LOGIN_URI + '/oauth2/auth',
+    tokenURL: process.env.LOGIN_URI + '/oauth2/token',
+    scope: process.env.LOGIN_SCOPES,
+    state: base64url(JSON.stringify({ state: process.env.LOGIN_APPID })),
 };
 
 const optionsTx = {
-    clientID: process.env.LOGINID_APPID,
-    clientSecret: process.env.LOGINID_APPSECRET,
-    callbackURL: process.env.LOGINID_REDIRECT_URI_TX,
-    authorizationURL: process.env.LOGINID_URI + '/hydra/oauth2/auth',
-    tokenURL: process.env.LOGINID_URI + '/hydra/oauth2/token',
-    scope: process.env.LOGINID_SCOPES,
-    state: base64url(JSON.stringify({ state: process.env.LOGINID_APPID })),
+    clientID: process.env.LOGIN_APPID,
+    clientSecret: process.env.LOGIN_APPSECRET,
+    callbackURL: process.env.LOGIN_REDIRECT_URI_TX,
+    authorizationURL: process.env.LOGIN_URI + '/oauth2/auth',
+    tokenURL: process.env.LOGIN_URI + '/oauth2/token',
+    scope: process.env.LOGIN_SCOPES,
+    state: base64url(JSON.stringify({ state: process.env.LOGIN_APPID })),
 };
 
 /**
@@ -58,7 +59,7 @@ const transactionStrategy = new OAuth2Strategy(optionsTx, verify)
  */
 oauth2Strategy.userProfile = async (accessToken, cb) => {
     try {
-        const { data: user } = await axios.get(`${process.env.LOGINID_URI}/hydra/userinfo`, {
+        const { data: user } = await axios.get(`${process.env.LOGIN_URI}/userinfo`, {
             headers: {
                 authorization: `Bearer ${accessToken}`
             }
@@ -69,7 +70,7 @@ oauth2Strategy.userProfile = async (accessToken, cb) => {
     }
 
 }
-
+app.use(morgan('combined'));
 /**
  * 
  */
@@ -114,7 +115,7 @@ app.get('/login', passport.authenticate('oauth2', { scope: ['openid', 'tx.*'] })
 
 app.post('/validate', async (req, res, next) => {
     try {
-        const { data: tx } = await axios.post('http://localhost:8080/api/oidc/tx', req.body);
+        const { data: tx } = await axios.post('https://poc1.awstest.loginid.io/api/oidc/tx', req.body);
         passport.authenticate('transaction', { scope: [`tx.${tx.id}`] })(req, res, next);
     } catch (err) {
         console.log(err);
@@ -129,7 +130,7 @@ app.get('/tx-success', async (req, res) => {
 
     let tx = {};
     if (txId) {
-        ({ data: tx } = await axios.get(`http://localhost:8080/api/oidc/tx/${txId}`));
+        ({ data: tx } = await axios.get(`https://poc1.awstest.loginid.io/api/oidc/tx/${txId}`));
     }
     res.render('tx-success', { tx });
 });
