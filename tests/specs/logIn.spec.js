@@ -13,6 +13,13 @@ describe("Log In", () => {
   login.driver.get(url);
 
   it("Should successfuly show login screen", async () => {
-    const button = await login.getButton();
+    const header = await login.driver.findElement({ css: "h1" }).getText();
+    expect(header).toEqual("Hello!");
+  });
+
+  it("Should successfuly direct to loginID login", async () => {
+    await login.goToChallenge();
+    const button = await login.getLoginIDButton();
+    expect(await button.getText()).toEqual("Login");
   });
 });
