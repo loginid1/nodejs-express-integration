@@ -1,1 +1,3 @@
-module.exports = {};
+module.exports = {
+  slowTestThreshold: 10000,
+};
