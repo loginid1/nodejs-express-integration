@@ -21,11 +21,15 @@ describe("Transaction Confirmation", () => {
     const currentUrl = await tx.driver.getCurrentUrl();
     if (currentUrl.includes("integration")) {
       await tx.driver.get(baseURL);
-      //await tx.driver.wait(until.urlIs(url + "/tx"));
     }
   });
 
+  afterAll(async () => await driver.close());
+
   it("Should successfully display tx route", async () => {
     await tx.goToTX();
+    await tx.driver.wait(until.urlIs(baseURL + "/tx"));
+    const header = await tx.getHeader();
+    expect(await header.getText()).toEqual("Create Transaction");
   });
 });
