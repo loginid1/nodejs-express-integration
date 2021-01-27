@@ -4,6 +4,7 @@ const chrome = require("selenium-webdriver/chrome");
 const chromedriver = require("chromedriver");
 const LogIn = require("../page_objects/Login");
 const TransactionConfirmation = require("../page_objects/TransactionConfirmation");
+const { writeImage } = require("../utils/fs");
 
 chrome.setDefaultService(new chrome.ServiceBuilder(chromedriver.path).build());
 
@@ -29,6 +30,8 @@ describe("Transaction Confirmation", () => {
   it("Should successfully display tx route", async () => {
     await tx.goToTX();
     await tx.driver.wait(until.urlIs(baseURL + "/tx"));
+    //image
+    await driver.takeScreenshot().then(writeImage("get_tx_route.png"));
     const header = await tx.getHeader();
     expect(await header.getText()).toEqual("Create Transaction");
   });

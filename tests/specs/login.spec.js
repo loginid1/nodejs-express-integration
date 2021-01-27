@@ -3,6 +3,7 @@ const { Builder, Capabilities } = require("selenium-webdriver");
 const chrome = require("selenium-webdriver/chrome");
 const chromedriver = require("chromedriver");
 const LogIn = require("../page_objects/Login");
+const { writeImage } = require("../utils/fs");
 
 chrome.setDefaultService(new chrome.ServiceBuilder(chromedriver.path).build());
 
@@ -26,6 +27,7 @@ describe("Log In", () => {
 
   it("Should successfully authenticate and redirect back to origin", async () => {
     await login.fillUpLoginIDFormAndSubmit(loginIDUsername, loginIDPassword);
+    await driver.takeScreenshot().then(writeImage("login_result.png"));
     expect(await login.getHeaderName()).toEqual("Hello!");
   });
 });
