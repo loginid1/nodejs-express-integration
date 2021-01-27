@@ -43,4 +43,10 @@ module.exports = class LogIn {
     await this.driver.findElement(this.locators.continueButton).click();
     await this.driver.wait(until.elementLocated(this.locators.eitherHeader));
   }
+
+  async fullLogin(username, password) {
+    await this.goToChallenge();
+    await this.fillUpLoginIDFormAndSubmit(username, password);
+    await this.driver.wait(until.elementLocated(this.locators.eitherHeader));
+  }
 };
